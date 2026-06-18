@@ -1,0 +1,52 @@
+name: CI/CD Pipeline - Web App
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'meu-app-web/**' # Só roda se alterarmos algo dentro da pasta da aplicação
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout do Código
+      uses: actions/checkout@v3
+
+    - name: Configurar Credenciais da AWS
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Login no Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, Tag e Push da Imagem
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: meu-app-web
+        IMAGE_TAG: ${{ github.sha }} # Usa o ID único do commit como versão
+      run: |
+        cd meu-app-web
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+    - name: Atualizar Manifesto do Kubernetes (GitOps)
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: meu-app-web
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Substitui a imagem antiga pela nova no nginx.yaml
+        sed -i "s|image: 237422644543.dkr.ecr.us-east-1.amazonaws.com/meu-app-web:.*|image: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" nginx.yaml
+        
+        # Faz o commit automático da alteração
+        git config --global user.name "GitHub Actions Bot"
+        git config --global user.email "actions@github.com"
+        git add nginx.yaml
+        git commit -m "Automated update: Nova imagem $IMAGE_TAG"
+        git push
