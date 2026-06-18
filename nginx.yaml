@@ -11,10 +11,12 @@ spec:
     metadata:
       labels:
         app: web
-    spec:
+    spec: # <-- Faltava este 'spec' (que define as configurações do Pod)
+      imagePullSecrets:
+      - name: aws-ecr-cred
       containers:
       - name: nginx
-        image: nginx:alpine
+        image: 237422644543.dkr.ecr.us-east-1.amazonaws.com/meu-app-web:v1.0
         ports:
         - containerPort: 80
 ---
