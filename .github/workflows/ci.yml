@@ -43,6 +43,7 @@ jobs:
       run: |
         # Substitui a imagem antiga pela nova no nginx.yaml
         sed -i "s|image: 237422644543.dkr.ecr.us-east-1.amazonaws.com/meu-app-web:.*|image: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" homolog/nginx.yaml
+        
         # Faz o commit automático da alteração
         git config --global user.name "GitHub Actions Bot"
         git config --global user.email "actions@github.com"
