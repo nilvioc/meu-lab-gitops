@@ -23,8 +23,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: meu-site-svc
+  name: meu-site-prod-svc
 spec:
+  type: NodePort
   selector:
     app: web
   ports:
