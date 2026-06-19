@@ -16,7 +16,7 @@ spec:
       - name: aws-ecr-cred
       containers:
       - name: nginx
-        image: 237422644543.dkr.ecr.us-east-1.amazonaws.com/meu-app-web:1bba98d6ea60d22e08d5f5a61758dffc409e53b1
+        image: 237422644543.dkr.ecr.us-east-1.amazonaws.com/meu-app-web:1bfea2abf2daf7018a6346eccb027913419e94a1
         ports:
         - containerPort: 80
 ---
