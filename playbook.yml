@@ -1,0 +1,8 @@
+---
+- name: Meu Primeiro Teste com Semaphore
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Imprimir mensagem de vitoria
+      debug:
+        msg: "Missao Cumprida! O Semaphore assumiu o controle do lab!"
