@@ -1,13 +1,21 @@
 terraform {
   required_providers {
-    local = {
-      source = "hashicorp/local"
-      version = "~> 2.4.0"
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
     }
   }
 }
 
-resource "local_file" "ola_terraform" {
-  content  = "Missao Cumprida! Arquivo gerado pelo Terraform sob o comando do Semaphore!"
-  filename = "${path.module}/resultado.txt"
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_ecr_repository" "lab_repo_terraform" {
+  name                 = "meu-repo-gerado-pelo-terraform"
+  image_tag_mutability = "MUTABLE"
+  
+  # Esta linha de nivel Senior garante que possamos apagar 
+  # o repositorio depois, mesmo se houver imagens dentro dele!
+  force_destroy = true 
 }

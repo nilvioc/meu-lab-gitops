@@ -1,5 +1,5 @@
 ---
-- name: Orquestrar Terraform via Ansible
+- name: Orquestrar Terraform na AWS
   hosts: localhost
   connection: local
   tasks:
@@ -21,7 +21,11 @@
       args:
         chdir: "{{ playbook_dir }}/infra"
 
-    - name: 3. Aplicar a Infraestrutura (apply)
+    - name: 3. Aplicar a Infraestrutura na AWS (apply)
       command: /tmp/terraform apply -auto-approve
       args:
         chdir: "{{ playbook_dir }}/infra"
+      environment:
+        AWS_ACCESS_KEY_ID: "{{ minha_chave_aws }}"
+        AWS_SECRET_ACCESS_KEY: "{{ meu_segredo_aws }}"
+        AWS_DEFAULT_REGION: "us-east-1"
