@@ -1,0 +1,20 @@
+---
+- name: Orquestrar Terraform via Ansible
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: 1. Baixar o binario do Terraform
+      unarchive:
+        src: https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip
+        dest: /tmp/
+        remote_src: yes
+
+    - name: 2. Inicializar o Terraform (init)
+      command: /tmp/terraform init
+      args:
+        chdir: "{{ playbook_dir }}/infra"
+
+    - name: 3. Aplicar a Infraestrutura (apply)
+      command: /tmp/terraform apply -auto-approve
+      args:
+        chdir: "{{ playbook_dir }}/infra"
