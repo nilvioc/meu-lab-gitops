@@ -17,5 +17,5 @@ resource "aws_ecr_repository" "lab_repo_terraform" {
   
   # Esta linha de nivel Senior garante que possamos apagar 
   # o repositorio depois, mesmo se houver imagens dentro dele!
-  force_destroy = true 
+  force_delete = true 
 }
