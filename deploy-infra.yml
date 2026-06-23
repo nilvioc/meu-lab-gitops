@@ -3,11 +3,18 @@
   hosts: localhost
   connection: local
   tasks:
-    - name: 1. Baixar o binario do Terraform
-      unarchive:
-        src: https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip
-        dest: /tmp/
-        remote_src: yes
+    - name: 1. Baixar o arquivo ZIP do Terraform
+      get_url:
+        url: https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip
+        dest: /tmp/terraform.zip
+
+    - name: 1.1 Extrair o ZIP usando o Python nativo
+      shell: python3 -m zipfile -e /tmp/terraform.zip /tmp/
+
+    - name: 1.2 Dar permissao de execucao ao binario
+      file:
+        path: /tmp/terraform
+        mode: '0755'
 
     - name: 2. Inicializar o Terraform (init)
       command: /tmp/terraform init
