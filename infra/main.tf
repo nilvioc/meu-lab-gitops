@@ -19,3 +19,11 @@ resource "aws_ecr_repository" "lab_repo_terraform" {
   # o repositorio depois, mesmo se houver imagens dentro dele!
   force_delete = true 
 }
+
+resource "aws_s3_bucket" "lab_bucket" {
+  bucket_prefix = "meu-lab-dados-"
+
+  tags = {
+    Ambiente = "Laboratorio"
+  }
+}
